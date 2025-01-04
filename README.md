@@ -1,4 +1,7 @@
-# multiAgentSystem [named to be defined latter]
+# multiAgentSystem [named to be defined later]
+
+![Preview](/.github/appPreview.gif)
+
 Full stack web app to interact with large language models, currently in progress.
 
 This is how to install it:
