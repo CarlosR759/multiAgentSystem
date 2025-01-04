@@ -15,5 +15,8 @@ source bin/activate
 ```bash
 pip install -r requirements.txt
 ```
+## Then Run the python script
+python -m pydantic_ai_examples.chat_app
 
-need completitions of last steps
+
+ to be changed: Not to use  the example script of pydantic ai
