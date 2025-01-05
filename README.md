@@ -2,7 +2,7 @@
 
 ![Preview](/.github/appPreview.gif)
 
-Full stack web app to intasdfasdfasdfasdferact with large language models, currently in progress.
+Full stack web app to interact with large language models, currently in progress.
 
 This is how to install it:
 
