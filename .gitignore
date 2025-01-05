@@ -1,5 +1,5 @@
-# Gif Files
-*.gif
+# Gif file from Readme
+.github/appPreview.gif
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
