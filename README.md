@@ -1,4 +1,4 @@
-# multiAgentSystem [named to be defined later]
+# Local Agent
 
 ![Preview](/.github/appPreview.gif)
 
