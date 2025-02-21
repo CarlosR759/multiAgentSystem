@@ -31,9 +31,23 @@ pip install -r requirements.txt
 ```bash
 ollama serve
 ```
-Current downloaded models can be found with ollama list, you can go to line 35 of chat_app.py to change the LLM model like this:
 
-- `agent = Agent('ollama:<Insert-model-name>')`
+### Configure the LLM model
+Set the model using an environment variable before running the application:
+```bash
+# Ejemplo con modelo Ollama
+export MODEL_NAME=ollama:llama3:8b
+python chat_app.py
+
+# Ejemplo con valor por defecto (deepseek-r1:8b)
+export MODEL_NAME=ollama:deepseek-r1:8b
+python chat_app.py
+```
+
+Available model formats:
+- `ollama:<model-name>`
+- `openai:<model-name>`
+- `anthropic:<model-name>`
 
 ### Then Run the python script
 ```bash

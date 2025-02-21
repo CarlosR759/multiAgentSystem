@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from functools import partial
 from pathlib import Path
 from typing import Annotated, Any, Callable, Literal, TypeVar
+import os
 
 import fastapi
 import logfire
@@ -33,7 +34,7 @@ from pydantic_ai.messages import (
 # 'if-token-present' means nothing will be sent (and the example will work) if you don't have logfire configured
 logfire.configure(send_to_logfire='if-token-present')
 
-agent = Agent('ollama:deepseek-r1:8b')
+agent = Agent(os.getenv('MODEL_NAME', 'ollama:llama3:8b'))
 THIS_DIR = Path(__file__).parent
 
 
