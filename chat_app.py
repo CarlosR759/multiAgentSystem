@@ -18,6 +18,8 @@ import logfire
 from fastapi import Depends, Request
 from fastapi.responses import FileResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
+
 from typing_extensions import LiteralString, ParamSpec, TypedDict
 
 from pydantic_ai import Agent
@@ -34,7 +36,7 @@ from pydantic_ai.messages import (
 # 'if-token-present' means nothing will be sent (and the example will work) if you don't have logfire configured
 logfire.configure(send_to_logfire='if-token-present')
 
-agent = Agent(os.getenv('MODEL_NAME', 'ollama:llama3:8b'))
+agent = Agent('ollama:llama3:8b')
 THIS_DIR = Path(__file__).parent
 
 
@@ -45,6 +47,25 @@ async def lifespan(_app: fastapi.FastAPI):
 
 
 app = fastapi.FastAPI(lifespan=lifespan)
+
+'''
+##Adding cors support to check potential fix solution.
+origins = [
+   "http://localhost",
+   "http://localhost:8000",
+   "http://localhost:39960",
+]
+
+# Add CORS middleware to the application
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+'''
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 #logfire.instrument_fastapi(app) FIX ME PLEASE.
 
@@ -100,7 +121,7 @@ def to_chat_message(m: ModelMessage) -> ChatMessage:
     raise UnexpectedModelBehavior(f'Unexpected message type for chat app: {m}')
 
 
-@app.post('/chat/')
+@app.post('/')
 async def post_chat(
     prompt: Annotated[str, fastapi.Form()], database: Database = Depends(get_db)
 ) -> StreamingResponse:
