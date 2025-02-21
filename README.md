@@ -35,11 +35,11 @@ ollama serve
 ### Configure the LLM model
 Set the model using an environment variable before running the application:
 ```bash
-# Ejemplo con modelo Ollama
+# Example with llama
 export MODEL_NAME=ollama:llama3:8b
 python chat_app.py
 
-# Ejemplo con valor por defecto (deepseek-r1:8b)
+# Example with deepseek
 export MODEL_NAME=ollama:deepseek-r1:8b
 python chat_app.py
 ```
