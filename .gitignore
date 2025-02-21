@@ -173,7 +173,7 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-# Archivos instalados por pip
+# pip installed files
 *.egg-info/
 *.egg
 *.whl
@@ -181,7 +181,7 @@ cython_debug/
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Archivos relacionados con entornos virtuales
+# Related files with virtual env
 .env
 .venv
 env/
@@ -189,19 +189,14 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+pyvenv.cfg
 
-# Archivos de bases de datos SQLite
+# SQLite files
 *.sqlite3
 *.db
 *.sqlite
 
-# Archivos de nodejs
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-debug.log
-yarn-error.log
-
+#Misc local generated files
 bin/
 lib/
 lib64
@@ -210,5 +205,3 @@ sdist/
 var/
 wheels/
 share/python-wheels/
-
-pyvenv.cfg
