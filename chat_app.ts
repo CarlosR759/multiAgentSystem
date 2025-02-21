@@ -38,10 +38,8 @@ class ChatApp {
         this.spinner = document.getElementById('spinner') as HTMLElement
         this.error = document.getElementById('error') as HTMLElement
 
-        // Ocultar el error al inicio
         this.hideError()
         
-        // Agregar evento de scroll
         this.conversation.addEventListener('scroll', this.handleScroll.bind(this))
         
         this.initialize()
@@ -51,14 +49,12 @@ class ChatApp {
         const { scrollTop, scrollHeight, clientHeight } = this.conversation;
         const newIsNearBottom = (scrollHeight - scrollTop - clientHeight) <= this.scrollThreshold;
         
-        // Solo actualizamos si el valor ha cambiado
         if (this.isNearBottom !== newIsNearBottom) {
             this.isNearBottom = newIsNearBottom;
         }
     }
 
     private shouldScrollToBottom(): boolean {
-        // Siempre hacer scroll si el mensaje es del usuario
         if (this.conversation.lastElementChild?.classList.contains('user')) {
             return true
         }
@@ -79,7 +75,6 @@ class ChatApp {
             }
             const text = await response.text();
             
-            // Si no hay mensajes, es normal - continuar sin error
             if (!text.trim()) {
                 return;
             }
@@ -99,7 +94,6 @@ class ChatApp {
             messages.forEach((message) => this.appendMessage(message));
             this.scrollToBottom();
 
-            // Configurar eventos
             this.form.addEventListener('submit', this.handleSubmit.bind(this));
             this.input.addEventListener('keydown', this.handleKeyDown.bind(this));
         } catch (e) {
@@ -116,11 +110,10 @@ class ChatApp {
         this.input.value = ''
         this.input.disabled = true
         this.showSpinner()
-        this.hideError() // Ocultar error al enviar nuevo mensaje
+        this.hideError()
         this.currentModelMessage = ''
         this.messageBuffer = ''
         
-        // Forzar scroll al enviar un nuevo mensaje
         this.isNearBottom = true
 
         try {
@@ -145,15 +138,12 @@ class ChatApp {
                 const { done, value } = await reader.read()
                 if (done) break
 
-                // Decodificar el chunk y agregarlo al buffer
                 const chunk = new TextDecoder().decode(value)
                 this.messageBuffer += chunk
 
                 try {
-                    // Intentar procesar mensajes completos del buffer
                     const lines = this.messageBuffer.split('\n')
                     
-                    // Mantener la última línea en el buffer si está incompleta
                     this.messageBuffer = lines.pop() || ''
 
                     for (const line of lines) {
@@ -179,7 +169,6 @@ class ChatApp {
                 }
             }
 
-            // Procesar cualquier mensaje restante en el buffer
             if (this.messageBuffer.trim()) {
                 try {
                     const message = JSON.parse(this.messageBuffer) as ChatMessage
@@ -211,17 +200,13 @@ class ChatApp {
     }
 
     private processModelContent(content: string): string {
-        // Primero procesamos el contenido think
         const thinkMatch = content.match(/<think>([\s\S]*?)<\/think>/);
         const thinkContent = thinkMatch ? thinkMatch[1].trim() : '';
         
-        // Removemos las etiquetas think del contenido principal
         let mainContent = content.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
         
-        // Convertimos el contenido principal a Markdown
         mainContent = marked.parse(mainContent);
         
-        // Si hay contenido think, lo agregamos al final
         if (thinkContent) {
             const processedThink = marked.parse(thinkContent);
             mainContent += `\n<div class="think-content collapsed"><div class="think-toggle">▶</div>${processedThink}</div>`;
@@ -234,7 +219,6 @@ class ChatApp {
         if (!content) return ''
         
         try {
-            // Eliminar líneas duplicadas que empiezan igual
             const lines = content.split('\n')
             const uniqueLines = lines.filter((line, index) => {
                 if (!line.trim()) return false
@@ -296,7 +280,6 @@ class ChatApp {
             e.preventDefault()
             this.form.requestSubmit()
         } else if (e.key === 'Enter' && e.shiftKey) {
-            // Permitir nueva línea con Shift+Enter
             return
         }
     }
@@ -330,7 +313,6 @@ class ChatApp {
         messageDiv.appendChild(timestamp)
 
         this.conversation.appendChild(messageDiv)
-        // Forzar scroll solo para mensajes del usuario
         this.scrollToBottom(message.role === 'user')
     }
 
@@ -345,7 +327,6 @@ class ChatApp {
     private showError() {
         if (this.error) {
             this.error.classList.add('visible')
-            // Auto-ocultar el error después de 5 segundos
             setTimeout(() => this.hideError(), 5000)
         }
     }
@@ -357,5 +338,4 @@ class ChatApp {
     }
 }
 
-// Inicializar la aplicación
 new ChatApp()
