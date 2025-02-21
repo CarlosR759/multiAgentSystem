@@ -1,93 +1,73 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Chat App</title>
-        <link
-            href="https://cdn.jsdelivr.net/npm/[email protected]/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-        />
-        <style>
-            main {
-                max-width: 700px;
-            }
-            #conversation .user::before {
-                content: "You asked: ";
-                font-weight: bold;
-                display: block;
-            }
-            #conversation .model::before {
-                content: "AI Response: ";
-                font-weight: bold;
-                display: block;
-            }
-            #spinner {
-                opacity: 0;
-                transition: opacity 500ms ease-in;
-                width: 30px;
-                height: 30px;
-                border: 3px solid #222;
-                border-bottom-color: transparent;
-                border-radius: 50%;
-                animation: rotation 1s linear infinite;
-            }
-            @keyframes rotation {
-                0% {
-                    transform: rotate(0deg);
-                }
-                100% {
-                    transform: rotate(360deg);
-                }
-            }
-            #spinner.active {
-                opacity: 1;
-            }
-        </style>
+        <title>Chat Agent</title>
+        <link rel="icon" type="image/x-icon" href="https://img.icons8.com/windows/32/artificial-intelligence.png">
+        <link href="https://cdn.jsdelivr.net/npm/[email protected]/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link href="/static/css/chat.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     </head>
     <body>
-        <main class="border rounded mx-auto my-5 p-4">
-            <h1>Chat App</h1>
-            <p>Ask me anything...</p>
-            <div id="conversation" class="px-2"></div>
-            <div class="d-flex justify-content-center mb-3">
-                <div id="spinner"></div>
+        <main>
+            <div class="chat-header">
+                <h1 class="chat-title">Agent AI</h1>
             </div>
-            <form method="post">
-                <input id="prompt-input" name="prompt" class="form-control" />
-                <div class="d-flex justify-content-end">
-                    <button class="btn btn-primary mt-2">Send</button>
+
+            <div class="chat-container">
+                <div class="chat-messages-container">
+                    <div id="conversation"></div>
                 </div>
-            </form>
-            <div id="error" class="d-none text-danger">
-                Error occurred, check the browser developer console for more
-                information.
+            </div>
+
+            <div class="chat-input-container">
+                <form id="prompt-form" method="post">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="prompt-input" 
+                            name="prompt" 
+                            class="form-control" 
+                            placeholder="Escribe tu mensaje aquí..."
+                            rows="3"
+                            autocomplete="off"
+                            required
+                        ></textarea>
+                        <button type="submit" class="send-button">
+                            Enviar
+                        </button>
+                    </div>
+                </form>
+                <div class="d-flex justify-content-center">
+                    <div id="spinner"></div>
+                </div>
+            </div>
+
+            <div id="error" class="d-none">
+                Error has been appears! Please look you console for more details
             </div>
         </main>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/typescript/5.6.3/typescript.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script type="module">
+            async function loadTs() {
+                const response = await fetch("/chat_app.ts");
+                const tsCode = await response.text();
+                const jsCode = window.ts.transpile(tsCode, { target: "es2015" });
+                let script = document.createElement("script");
+                script.type = "module";
+                script.text = jsCode;
+                document.body.appendChild(script);
+            }
+
+            loadTs().catch((e) => {
+                console.error(e);
+                document.getElementById("error").classList.remove("d-none");
+                document.getElementById("spinner").classList.remove("active");
+            });
+        </script>
     </body>
 </html>
-<script
-    src="https://cdnjs.cloudflare.com/ajax/libs/typescript/5.6.3/typescript.min.js"
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-></script>
-<script type="module">
-    // to let me write TypeScript, without adding the burden of npm we do a dirty, non-production-ready hack
-    // and transpile the TypeScript code in the browser
-    // this is (arguably) A neat demo trick, but not suitable for production!
-    async function loadTs() {
-        const response = await fetch("/chat_app.ts");
-        const tsCode = await response.text();
-        const jsCode = window.ts.transpile(tsCode, { target: "es2015" });
-        let script = document.createElement("script");
-        script.type = "module";
-        script.text = jsCode;
-        document.body.appendChild(script);
-    }
-
-    loadTs().catch((e) => {
-        console.error(e);
-        document.getElementById("error").classList.remove("d-none");
-        document.getElementById("spinner").classList.remove("active");
-    });
-</script>
