@@ -225,7 +225,6 @@ main {
     border-radius: 0.3em;
 }
 
-/* Estilos para highlight.js */
 .hljs-comment,
 .hljs-quote {
     color: var(--code-comment);
@@ -324,7 +323,6 @@ main {
     user-select: none;
 }
 
-/* Mejoras para el contenido Markdown */
 .message-content {
     line-height: 1.6;
 }
@@ -474,7 +472,6 @@ main {
     animation: fadeIn 0.3s ease-in;
 }
 
-/* Scrollbar personalizado */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -493,7 +490,6 @@ main {
     background: #718096;
 }
 
-/* Asegurarnos de que hljs no sobrescriba nuestro fondo */
 .hljs {
     background: var(--code-bg) !important;
     color: var(--code-text) !important;
