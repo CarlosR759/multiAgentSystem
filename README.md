@@ -15,7 +15,7 @@ Or you can just use this if you don't want to create a new folder:
 python -m venv .
 ```
 ### Go to your virt env in your "multiAgentSytem" folder:
-#### Unix 
+#### Unix
 ```bash
 source bin/activate
 ```
@@ -51,7 +51,7 @@ Available model formats:
 
 ### Then Run the python script
 ```bash
-python chat_app.py
+uvicorn chat_app:app --reload --port 8000
 ```
 After that you can access the application going to your browser with:
 ```bash

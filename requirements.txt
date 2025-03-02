@@ -1,3 +1,5 @@
 pydantic-ai[logfire]==0.0.19
 fastapi[standard]
 logfire[sqlite3]
+asyncpg
+uvicorn

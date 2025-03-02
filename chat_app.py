@@ -13,12 +13,14 @@ from pathlib import Path
 from typing import Annotated, Any, Callable, Literal, TypeVar
 import os
 
+
+
 import fastapi
 import logfire
 from fastapi import Depends, Request
 from fastapi.responses import FileResponse, Response, StreamingResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware #TO remove if cors was not an issue
 
 from typing_extensions import LiteralString, ParamSpec, TypedDict
 
@@ -46,25 +48,8 @@ async def lifespan(_app: fastapi.FastAPI):
         yield {'db': db}
 
 
-app = fastapi.FastAPI(lifespan=lifespan)
-
-'''
-##Adding cors support to check potential fix solution.
-origins = [
-   "http://localhost",
-   "http://localhost:8000",
-   "http://localhost:39960",
-]
-
-# Add CORS middleware to the application
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-'''
+#app = fastapi.FastAPI(lifespan=lifespan)
+app = fastapi.FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 #logfire.instrument_fastapi(app) FIX ME PLEASE.
@@ -232,6 +217,36 @@ class Database:
             partial(func, **kwargs),
             *args,  # type: ignore
         )
+
+'''
+NO TOMES EN CUENTA ESTO ARIEL ES PARA EL RAG EN PROGRESO :)
+#List of dependencies and code  added for postgres +  pgvector support
+from fastapi import FastAPI, Request, Depends, Form
+from fastapi.responses import FileResponse, StreamingResponse
+from pydantic_ai import Agent, RunContext
+from dataclasses import dataclass
+from typing import Annotated
+import asyncio
+import sqlite3
+from contextlib import asynccontextmanager
+from datetime import datetime, timezone
+import json
+
+
+# Define dependencies for database connection
+@dataclass
+class Deps:
+    db: sqlite3.Connection
+
+# Database connection manager
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    con = sqlite3.connect("main-database-for-rag")
+    yield {"db": con}
+    con.close()
+
+#End of implementation of postgres + pgvector support
+'''
 
 if __name__ == '__main__':
     import uvicorn
