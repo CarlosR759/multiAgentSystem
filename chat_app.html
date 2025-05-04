@@ -4,12 +4,25 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Chat Agent</title>
-        <link rel="icon" type="image/x-icon" href="https://img.icons8.com/windows/32/artificial-intelligence.png">
-        <link href="https://cdn.jsdelivr.net/npm/[email protected]/dist/css/bootstrap.min.css" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link
+            rel="icon"
+            type="image/x-icon"
+            href="https://img.icons8.com/windows/32/artificial-intelligence.png"
+        />
+        <link
+            href="https://cdn.jsdelivr.net/npm/[email protected]/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.bunny.net/css2?family=Inter:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
         <link href="/static/css/chat.css" rel="stylesheet" />
         <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css"
+        />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     </head>
     <body>
@@ -27,10 +40,10 @@
             <div class="chat-input-container">
                 <form id="prompt-form" method="post">
                     <div class="input-wrapper">
-                        <textarea 
-                            id="prompt-input" 
-                            name="prompt" 
-                            class="form-control" 
+                        <textarea
+                            id="prompt-input"
+                            name="prompt"
+                            class="form-control"
                             placeholder="Escribe tu mensaje aquí..."
                             rows="3"
                             autocomplete="off"
@@ -51,12 +64,18 @@
             </div>
         </main>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/typescript/5.6.3/typescript.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/typescript/5.6.3/typescript.min.js"
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        ></script>
         <script type="module">
             async function loadTs() {
                 const response = await fetch("/chat_app.ts");
                 const tsCode = await response.text();
-                const jsCode = window.ts.transpile(tsCode, { target: "es2015" });
+                const jsCode = window.ts.transpile(tsCode, {
+                    target: "es2015",
+                });
                 let script = document.createElement("script");
                 script.type = "module";
                 script.text = jsCode;
@@ -65,6 +84,7 @@
 
             loadTs().catch((e) => {
                 console.error(e);
+                console.log(e);
                 document.getElementById("error").classList.remove("d-none");
                 document.getElementById("spinner").classList.remove("active");
             });

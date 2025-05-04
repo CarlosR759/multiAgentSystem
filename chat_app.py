@@ -16,6 +16,7 @@ import os
 
 
 import fastapi
+from fastapi.exceptions import HTTPException
 import logfire
 from fastapi import Depends, Request
 from fastapi.responses import FileResponse, Response, StreamingResponse
@@ -38,7 +39,9 @@ from pydantic_ai.messages import (
 # 'if-token-present' means nothing will be sent (and the example will work) if you don't have logfire configured
 logfire.configure(send_to_logfire='if-token-present')
 
-agent = Agent('ollama:llama3:8b')
+model_name = os.getenv('MODEL_NAME')
+model_name = f"ollama:{model_name}"
+agent = Agent(model_name)
 THIS_DIR = Path(__file__).parent
 
 
@@ -48,12 +51,17 @@ async def lifespan(_app: fastapi.FastAPI):
         yield {'db': db}
 
 
-#app = fastapi.FastAPI(lifespan=lifespan)
-app = fastapi.FastAPI()
+app = fastapi.FastAPI(lifespan=lifespan)
+
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
-#logfire.instrument_fastapi(app) FIX ME PLEASE.
+#logfire.instrument_fastapi(app) FIX ME PLEASE if you want LLM monitoring in the future.
 
+#This api is to get out the annoying error from browser to get the favicon. This need to be implemented well in the future.
+@app.get('/favicon.ico')
+async def lol():
+    lol = []
+    return lol
 
 @app.get('/')
 async def index() -> FileResponse:
@@ -106,7 +114,7 @@ def to_chat_message(m: ModelMessage) -> ChatMessage:
     raise UnexpectedModelBehavior(f'Unexpected message type for chat app: {m}')
 
 
-@app.post('/')
+@app.post('/chat/')
 async def post_chat(
     prompt: Annotated[str, fastapi.Form()], database: Database = Depends(get_db)
 ) -> StreamingResponse:
@@ -217,36 +225,6 @@ class Database:
             partial(func, **kwargs),
             *args,  # type: ignore
         )
-
-'''
-NO TOMES EN CUENTA ESTO ARIEL ES PARA EL RAG EN PROGRESO :)
-#List of dependencies and code  added for postgres +  pgvector support
-from fastapi import FastAPI, Request, Depends, Form
-from fastapi.responses import FileResponse, StreamingResponse
-from pydantic_ai import Agent, RunContext
-from dataclasses import dataclass
-from typing import Annotated
-import asyncio
-import sqlite3
-from contextlib import asynccontextmanager
-from datetime import datetime, timezone
-import json
-
-
-# Define dependencies for database connection
-@dataclass
-class Deps:
-    db: sqlite3.Connection
-
-# Database connection manager
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    con = sqlite3.connect("main-database-for-rag")
-    yield {"db": con}
-    con.close()
-
-#End of implementation of postgres + pgvector support
-'''
 
 if __name__ == '__main__':
     import uvicorn

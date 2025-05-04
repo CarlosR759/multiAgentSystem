@@ -57,3 +57,38 @@ After that you can access the application going to your browser with:
 ```bash
 localhost:8000
 ```
+
+## How to reproduce current error:
+ Primero tienes que asegurarte que el .chat_app_messages.sqlite no existe como archivo. Cuando la base de datos sql lite se instancia, toma ese nombre.
+ Asegurate de tenerla borrada siempre antes de depurar :)
+
+ Luego instancia el backend con
+ ```bash
+uvicorn chat_app:app --reload --port 8000
+ ```
+
+Te va a generar el archivo .chat_app_messages.sqlite porque no hay ninguno, la bd esta vacia sin chat creado. El error se bypassea cuando logras poner un chat en la BD exitosamente.
+
+Luego andate al browser y manda un mensaje, se va caer y vas encontrar un error 405, pero si vas a
+
+```bash
+localhost:8000/redoc
+```
+
+Te sale en el POST un error 422.
+
+Puedes tambien mandarle consultas a la api tambien por:
+
+```bash
+localhost:8000/docs
+```
+
+Si mandas la query por localhost:8000/docs te deberia funcionar despues cualquier mensaje en el browser, hasta que borres el .chat_app_messages.sqlite.
+
+puedes hacer tambien mandar un POST por curl asi:
+
+```bash
+curl -X POST "http://localhost:8000/chat/" -H "Content-type: application/x-www-form-urlencoded" --data-raw "prompt=Hello%20World"
+```
+
+Por lo tanto el problema solo ocurre cuando estas en el browser y quieres mandar el primer input al LLM :/
